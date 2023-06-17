@@ -1,38 +1,36 @@
-#ifndef VARIABLE_H_INCLUDED
-#define VARIABLE_H_INCLUDED
-//Ì«Ñô£¬µØÇò£¬ÔÂÁÁµÄ²ÄÖÊÊôĞÔ
-float sunDiffuse[] = {1.0f, 1.0f, 0.0f, 1.0f};    // Ì«ÑôµÄ·´ÉäÂÊ
-float earthDiffuse[] = {0.2f, 0.2f, 1.0f, 1.0f};  // µØÇòµÄ·´ÉäÂÊ
-float moonDiffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};   // ÔÂÁÁµÄ·´ÉäÂÊ
-//¹âÔ´Î»ÖÃ
-//ĞĞĞÇµÄ°ë¾¶
+//å¤ªé˜³ï¼Œåœ°çƒï¼Œæœˆäº®çš„æè´¨å±æ€§
+float sunDiffuse[] = {1.0f, 1.0f, 0.0f, 1.0f};    // å¤ªé˜³çš„åå°„ç‡
+float earthDiffuse[] = {0.2f, 0.2f, 1.0f, 1.0f};  // åœ°çƒçš„åå°„ç‡
+float moonDiffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};   // æœˆäº®çš„åå°„ç‡
+//å…‰æºä½ç½®
+//è¡Œæ˜Ÿçš„åŠå¾„
 GLfloat earthRadius = 0.7;
 GLfloat moonRadius = 0.1;
 GLfloat sunRadius = 1.8;
 GLfloat goldRadius = 0.5;
 GLfloat waterRadius = 0.23;
 GLfloat fireRadius = 0.35;
-// ĞĞĞÇµÄ×Ô×ªËÙ¶È
+// è¡Œæ˜Ÿçš„è‡ªè½¬é€Ÿåº¦
 GLfloat earthSelfRotationSpeed = 2.0;
 GLfloat moonSelfRotationSpeed = 1.0;
 GLfloat sunSelfRotationSpeed = 0.2;
 GLfloat goldSelfRotationSpeed = 2.2;
 GLfloat waterSelfRotationSpeed = 3.0;
 GLfloat fireSelfRotationSpeed = 1.8;
-// ĞĞĞÇµÄ¹«×ªËÙ¶È
+// è¡Œæ˜Ÿçš„å…¬è½¬é€Ÿåº¦
 GLfloat earthOrbitSpeed = 0.5;
 GLfloat moonOrbitSpeed = 7.0;
 GLfloat goldOrbitSpeed = 0.9;
 GLfloat waterOrbitSpeed = 2.0;
 GLfloat fireOrbitSpeed = 0.25;
-// ĞĞĞÇ¹«×ª°ë¾¶
+// è¡Œæ˜Ÿå…¬è½¬åŠå¾„
 GLfloat earthOrbitRadius = 8.0;
 GLfloat moonOrbitRadius = 1.3;
 GLfloat sunOrbitRadius = 0.0;
 GLfloat goldOrbitRadius = 5.0;
 GLfloat waterOrbitRadius = 2.5;
 GLfloat fireOrbitRadius = 12.0;
-// ĞĞĞÇµ±Ç°¹«×ª½Ç¶È
+// è¡Œæ˜Ÿå½“å‰å…¬è½¬è§’åº¦
 GLfloat earthOrbitAngle = 0.0;
 GLfloat moonOrbitAngle = 0.0;
 GLfloat sunOrbitAngle = 0.0;
@@ -40,7 +38,7 @@ GLfloat goldOrbitAngle = 0.0;
 GLfloat waterOrbitAngle = 0.0;
 GLfloat fireOrbitAngle = 0.0;
 GLfloat Angle = 0.0;
-//ÎÆÀíÌùÍ¼¶ÔÏó
+//çº¹ç†è´´å›¾å¯¹è±¡
 GLuint earthTexture;
 GLuint moonTexture;
 GLuint sunTexture;

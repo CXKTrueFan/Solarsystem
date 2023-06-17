@@ -3,93 +3,93 @@
 #include <stdlib.h>
 #include<stdio.h>
 #include<variable.h>
-GLubyte*  readImg(char* filename, int * imagewidth, int * imageheight)  //¶ÁÈ¡ÎÆÀíbmpÎÄ¼ş
+GLubyte*  readImg(char* filename, int * imagewidth, int * imageheight)  //è¯»å–çº¹ç†bmpæ–‡ä»¶
 {
-     //´ò¿ªÎÄ¼ş
+     //æ‰“å¼€æ–‡ä»¶
       int pixellength;
       GLubyte *  pixeldata ;
       FILE* pfile=fopen(filename,"rb");
       if(pfile == 0) exit(0);
-    //¶ÁÈ¡Í¼Ïñ´óĞ¡
+    //è¯»å–å›¾åƒå¤§å°
        fseek(pfile,0x0012,SEEK_SET);
        fread(imagewidth,sizeof(*imagewidth),1,pfile);
        fread(imageheight,sizeof(*imageheight),1,pfile);
-    //¼ÆËãÏñËØÊı¾İ³¤¶È
+    //è®¡ç®—åƒç´ æ•°æ®é•¿åº¦
        pixellength=(*imagewidth)*3;
        while(pixellength%4 != 0)pixellength++;
        pixellength *= (*imageheight);
-     //¶ÁÈ¡ÏñËØÊı¾İ
+     //è¯»å–åƒç´ æ•°æ®
        pixeldata = (GLubyte*)malloc(pixellength);
        if(pixeldata == 0) exit(0);
        fseek(pfile,54,SEEK_SET);
        fread(pixeldata,pixellength,1,pfile);
-        //¹Ø±ÕÎÄ¼ş
+        //å…³é—­æ–‡ä»¶
        fclose(pfile);
        return pixeldata;
   }
-void LoadTexture(char * filename, GLuint &texture)    //¼ÓÔØÎÆÀí
+void LoadTexture(char * filename, GLuint &texture)    //åŠ è½½çº¹ç†
 {
 	GLubyte * data;
 	GLint width, height;
 	FILE * file;
-    data=readImg(filename, &width, &height );//¶ÁÎÄ¼ş
+    data=readImg(filename, &width, &height );//è¯»æ–‡ä»¶
 	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);//°ó¶¨ÎÆÀí
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);//Ö¸¶¨ÎÆÀíÌùÍ¼Óë²ÄÖÊµÄ»ìºÏÄ£Ê½
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //ÏßĞÔÂËÍ¼
+	glBindTexture(GL_TEXTURE_2D, texture);//ç»‘å®šçº¹ç†
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);//æŒ‡å®šçº¹ç†è´´å›¾ä¸æè´¨çš„æ··åˆæ¨¡å¼
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //çº¿æ€§æ»¤å›¾
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     currentCoeff = xequalzero;
     currentGenMode = GL_OBJECT_LINEAR;
     currentPlane = GL_OBJECT_PLANE;
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, width, height, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, data);
-	glEnable(GL_TEXTURE_2D);//´ò¿ªÎÆÀíÓ³Éä
-	free(data); //ÊÍ·ÅÎÆÀíÍ¼ÏñÊı¾İ£¬ÎÆÀíÊı¾İÒÑÓÉÉÏÒ»¾äÉú³É²¢±£´æµ½ÎÆÀí»º´æÖĞ£¬Ê¹ÓÃÍê±ÏºóÓ¦ÓÃglDeleteTexturesÊÍ·ÅÎÆÀí»º´æ
+	glEnable(GL_TEXTURE_2D);//æ‰“å¼€çº¹ç†æ˜ å°„
+	free(data); //é‡Šæ”¾çº¹ç†å›¾åƒæ•°æ®ï¼Œçº¹ç†æ•°æ®å·²ç”±ä¸Šä¸€å¥ç”Ÿæˆå¹¶ä¿å­˜åˆ°çº¹ç†ç¼“å­˜ä¸­ï¼Œä½¿ç”¨å®Œæ¯•ååº”ç”¨glDeleteTexturesé‡Šæ”¾çº¹ç†ç¼“å­˜
 }
-// ³õÊ¼»¯º¯Êı
+// åˆå§‹åŒ–å‡½æ•°
 void init()
-{   //¸ú¾İÎÆÀíÎÄ¼şµÄ¾ßÌåÎ»ÖÃ½øĞĞ¸ü¸Ä
-    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\earth_texture.bmp",earthTexture);//´´½¨²¢°ó¶¨µØÇòÎÆÀí¶ÔÏó
-    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\moon_texture.bmp",moonTexture);//´´½¨²¢°ó¶¨ÔÂÇòÎÆÀí¶ÔÏó
-    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\sun_texture.bmp",sunTexture);//´´½¨²¢°ó¶¨Ì«ÑôÎÆÀí¶ÔÏó
-    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\water_texture.bmp",waterTexture);//´´½¨²¢°ó¶¨Ë®ĞÇÎÆÀí¶ÔÏó
-    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\gold_texture.bmp",goldTexture);//´´½¨²¢°ó¶¨½ğĞÇÎÆÀí¶ÔÏó
-    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\fire_texture.bmp",fireTexture);//´´½¨²¢°ó¶¨»ğĞÇÎÆÀí¶ÔÏó
-    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\background.bmp",background);//´´½¨²¢°ó¶¨±³¾°ÎÆÀí¶ÔÏó
-    // ÉèÖÃÇåÆÁÉ«
+{   //è·Ÿæ®çº¹ç†æ–‡ä»¶çš„å…·ä½“ä½ç½®è¿›è¡Œæ›´æ”¹
+    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\earth_texture.bmp",earthTexture);//åˆ›å»ºå¹¶ç»‘å®šåœ°çƒçº¹ç†å¯¹è±¡
+    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\moon_texture.bmp",moonTexture);//åˆ›å»ºå¹¶ç»‘å®šæœˆçƒçº¹ç†å¯¹è±¡
+    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\sun_texture.bmp",sunTexture);//åˆ›å»ºå¹¶ç»‘å®šå¤ªé˜³çº¹ç†å¯¹è±¡
+    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\water_texture.bmp",waterTexture);//åˆ›å»ºå¹¶ç»‘å®šæ°´æ˜Ÿçº¹ç†å¯¹è±¡
+    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\gold_texture.bmp",goldTexture);//åˆ›å»ºå¹¶ç»‘å®šé‡‘æ˜Ÿçº¹ç†å¯¹è±¡
+    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\fire_texture.bmp",fireTexture);//åˆ›å»ºå¹¶ç»‘å®šç«æ˜Ÿçº¹ç†å¯¹è±¡
+    LoadTexture("D:\\JISUANJITUXINXUESHIYAN\\FinalWork\\background.bmp",background);//åˆ›å»ºå¹¶ç»‘å®šèƒŒæ™¯çº¹ç†å¯¹è±¡
+    // è®¾ç½®æ¸…å±è‰²
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glEnable(GL_DEPTH_TEST);
 }
 
 void drawbackground()
 {
-    glDisable(GL_DEPTH_TEST);   //¹Ø±ÕÉî¶È²âÊÔ;
+    glDisable(GL_DEPTH_TEST);   //å…³é—­æ·±åº¦æµ‹è¯•;
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, background);       //°ó¶¨±³¾°ÎÆÀí
-    glBegin(GL_QUADS);      //½«Í¼Æ¬ËÄ¸ö½ÇµÄÎ»ÖÃÉèÖÃÎªÕı½»´°¿Úºó²Ã¼ôÃæµÄËÄ¸ö½Ç£»
+    glBindTexture(GL_TEXTURE_2D, background);       //ç»‘å®šèƒŒæ™¯çº¹ç†
+    glBegin(GL_QUADS);      //å°†å›¾ç‰‡å››ä¸ªè§’çš„ä½ç½®è®¾ç½®ä¸ºæ­£äº¤çª—å£åè£å‰ªé¢çš„å››ä¸ªè§’ï¼›
     glTexCoord2d(0.0, 0.0); glVertex3d(-zoom * win_width / win_height, -zoom, -300);
     glTexCoord2d(1.0, 0.0); glVertex3d(zoom * win_width / win_height, -zoom, -300);
     glTexCoord2d(1.0, 1.0); glVertex3d(zoom * win_width / win_height, zoom, -300);
     glTexCoord2d(0.0, 1.0); glVertex3d(-zoom * win_width / win_height, zoom, -300);
     glEnd();
     glDisable(GL_TEXTURE_2D);
-    glEnable(GL_DEPTH_TEST);   //¿ªÆôÉî¶È²âÊÔ£»
+    glEnable(GL_DEPTH_TEST);   //å¼€å¯æ·±åº¦æµ‹è¯•ï¼›
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(45, (float)win_width/win_height, 0.01, 3000);
 }
-void drawsun(GLUquadricObj*  qobj)    //äÖÈ¾Ì«Ñô
+void drawsun(GLUquadricObj*  qobj)    //æ¸²æŸ“å¤ªé˜³
 {
-  glEnable(GL_LIGHTING); // ÆôÓÃ¹âÕÕ
-  GLfloat sun_emission[] = {1.0, 1.0, 0.0, 1.0}; // ·¢¹âÑÕÉ«Îª»ÆÉ«
-  glMaterialfv(GL_FRONT, GL_EMISSION, sun_emission); // ÉèÖÃ²ÄÖÊÊôĞÔ
-  glEnable(GL_LIGHT0);    // ÆôÓÃ¹âÔ´0
-  GLfloat position[] = {10.0, 10.0, 10.0, 0.0}; // ¹âÔ´ÔÚ (10, 10, 10) Î»ÖÃ
-  glLightfv(GL_LIGHT0, GL_POSITION, position); // ÉèÖÃ¹âÔ´ÊôĞÔ
-  glEnable(GL_TEXTURE_2D); //ÆôÓÃÎÆÀí
-  glRotatef(sunSelfRotationSpeed * sunOrbitAngle, 0.0, 1.0, 0.0); // ÑØ Y Öá×Ô×ª
+  glEnable(GL_LIGHTING); // å¯ç”¨å…‰ç…§
+  GLfloat sun_emission[] = {1.0, 1.0, 0.0, 1.0}; // å‘å…‰é¢œè‰²ä¸ºé»„è‰²
+  glMaterialfv(GL_FRONT, GL_EMISSION, sun_emission); // è®¾ç½®æè´¨å±æ€§
+  glEnable(GL_LIGHT0);    // å¯ç”¨å…‰æº0
+  GLfloat position[] = {10.0, 10.0, 10.0, 0.0}; // å…‰æºåœ¨ (10, 10, 10) ä½ç½®
+  glLightfv(GL_LIGHT0, GL_POSITION, position); // è®¾ç½®å…‰æºå±æ€§
+  glEnable(GL_TEXTURE_2D); //å¯ç”¨çº¹ç†
+  glRotatef(sunSelfRotationSpeed * sunOrbitAngle, 0.0, 1.0, 0.0); // æ²¿ Y è½´è‡ªè½¬
   glPushMatrix();
-  glColor3f(1.0, 1.0, 0.0); // Ì«ÑôÑÕÉ«Îª»ÆÉ«
+  glColor3f(1.0, 1.0, 0.0); // å¤ªé˜³é¢œè‰²ä¸ºé»„è‰²
   glRotatef(sunOrbitAngle, 0.0, 1.0, 0.0);
   glTranslatef(sunOrbitRadius, 0.0, 0.0);
   glBindTexture(GL_TEXTURE_2D,sunTexture);
@@ -100,43 +100,43 @@ void drawsun(GLUquadricObj*  qobj)    //äÖÈ¾Ì«Ñô
 void drawplanet(GLUquadricObj*  qobj)
 {
   glEnable(GL_DEPTH_TEST);
-    // äÖÈ¾Ë®ĞÇ
+    // æ¸²æŸ“æ°´æ˜Ÿ
   glPushMatrix();
   glRotatef(waterOrbitAngle, 0.0, 1.0, 0.0);
   glTranslatef(waterOrbitRadius, 0.0, 0.0);
-  glRotatef(waterOrbitAngle, 0.0, 1.0, 0.0); // ÑØ Y ÖáĞı×ª£¬²»ĞèÒª³Ë¹«×ª½ÇËÙ¶È
-  glTranslatef(0.0, 0.0, -sunRadius); // ÒÆ¶¯µ½ÕıÈ·µÄÎ»ÖÃ
-  glRotatef(waterSelfRotationSpeed * waterOrbitAngle, 0.0, 1.0, 0.0); // ÑØ Y Öá×Ô×ª
+  glRotatef(waterOrbitAngle, 0.0, 1.0, 0.0); // æ²¿ Y è½´æ—‹è½¬ï¼Œä¸éœ€è¦ä¹˜å…¬è½¬è§’é€Ÿåº¦
+  glTranslatef(0.0, 0.0, -sunRadius); // ç§»åŠ¨åˆ°æ­£ç¡®çš„ä½ç½®
+  glRotatef(waterSelfRotationSpeed * waterOrbitAngle, 0.0, 1.0, 0.0); // æ²¿ Y è½´è‡ªè½¬
   glBindTexture(GL_TEXTURE_2D, waterTexture);
   gluQuadricTexture(qobj, GL_TRUE);
-  gluSphere(qobj, waterRadius, longitude, latitude);//¶ş´ÎÇúÃæqobj
+  gluSphere(qobj, waterRadius, longitude, latitude);//äºŒæ¬¡æ›²é¢qobj
   glPopMatrix();
 
-// äÖÈ¾½ğĞÇ
+// æ¸²æŸ“é‡‘æ˜Ÿ
   glPushMatrix();
   glRotatef(goldOrbitAngle, 0.0, 1.0, 0.0);
   glTranslatef(goldOrbitRadius, 0.0, 0.0);
-  glRotatef(goldOrbitAngle, 0.0, 1.0, 0.0); // ÑØ Y ÖáĞı×ª£¬²»ĞèÒª³Ë¹«×ª½ÇËÙ¶È
-  glTranslatef(0.0, 0.0, -sunRadius); // ÒÆ¶¯µ½ÕıÈ·µÄÎ»ÖÃ
-  glRotatef(goldSelfRotationSpeed * goldOrbitAngle, 0.0, 1.0, 0.0); // ÑØ Y Öá×Ô×ª
+  glRotatef(goldOrbitAngle, 0.0, 1.0, 0.0); // æ²¿ Y è½´æ—‹è½¬ï¼Œä¸éœ€è¦ä¹˜å…¬è½¬è§’é€Ÿåº¦
+  glTranslatef(0.0, 0.0, -sunRadius); // ç§»åŠ¨åˆ°æ­£ç¡®çš„ä½ç½®
+  glRotatef(goldSelfRotationSpeed * goldOrbitAngle, 0.0, 1.0, 0.0); // æ²¿ Y è½´è‡ªè½¬
   glBindTexture(GL_TEXTURE_2D, goldTexture);
   gluQuadricTexture(qobj, GL_TRUE);
-  gluSphere(qobj, goldRadius, longitude, latitude);//¶ş´ÎÇúÃæqobj
+  gluSphere(qobj, goldRadius, longitude, latitude);//äºŒæ¬¡æ›²é¢qobj
   glPopMatrix();
 
-// äÖÈ¾µØÇò
+// æ¸²æŸ“åœ°çƒ
   glPushMatrix();
   glRotatef(earthOrbitAngle, 0.0, 1.0, 0.0);
   glTranslatef(earthOrbitRadius, 0.0, 0.0);
-  glRotatef(earthOrbitAngle, 0.0, 1.0, 0.0); // ÑØ Y ÖáĞı×ª£¬²»ĞèÒª³Ë¹«×ª½ÇËÙ¶È
-  glTranslatef(0.0, 0.0, -sunRadius); // ÒÆ¶¯µ½ÕıÈ·µÄÎ»ÖÃ
-  glRotatef(earthSelfRotationSpeed * Angle, 0.0, 1.0, 0.0); // ×Ô×ª
+  glRotatef(earthOrbitAngle, 0.0, 1.0, 0.0); // æ²¿ Y è½´æ—‹è½¬ï¼Œä¸éœ€è¦ä¹˜å…¬è½¬è§’é€Ÿåº¦
+  glTranslatef(0.0, 0.0, -sunRadius); // ç§»åŠ¨åˆ°æ­£ç¡®çš„ä½ç½®
+  glRotatef(earthSelfRotationSpeed * Angle, 0.0, 1.0, 0.0); // è‡ªè½¬
   glBindTexture(GL_TEXTURE_2D, earthTexture);
   gluQuadricTexture(qobj, GL_TRUE);
   glMaterialfv(GL_FRONT, GL_DIFFUSE, earthDiffuse);
-  gluSphere(qobj, earthRadius, longitude, latitude);//¶ş´ÎÇúÃæqobj
+  gluSphere(qobj, earthRadius, longitude, latitude);//äºŒæ¬¡æ›²é¢qobj
 
-// äÖÈ¾ÔÂÇò
+// æ¸²æŸ“æœˆçƒ
     glPushMatrix();
     glRotatef(moonOrbitAngle, 0.0, 1.0, 0.0);
     glTranslatef(moonOrbitRadius, 0.0, 0.0);
@@ -146,13 +146,13 @@ void drawplanet(GLUquadricObj*  qobj)
     gluSphere(qobj, moonRadius, longitude,latitude);
     glPopMatrix();
 
-// äÖÈ¾»ğĞÇ
+// æ¸²æŸ“ç«æ˜Ÿ
     glPushMatrix();
     glRotatef(fireOrbitAngle, 0.0, 1.0, 0.0);
     glTranslatef(fireOrbitRadius, 0.0, 0.0);
-    glRotatef(fireOrbitAngle, 0.0, 1.0, 0.0); // ÑØ Y ÖáĞı×ª£¬²»ĞèÒª³Ë¹«×ª½ÇËÙ¶È
-    glTranslatef(0.0, 0.0, -sunRadius);     // ÒÆ¶¯µ½ÕıÈ·µÄÎ»ÖÃ
-    glRotatef(fireSelfRotationSpeed * fireOrbitAngle, 0.0, 1.0, 0.0); // ÑØ Y Öá×Ô×ª
+    glRotatef(fireOrbitAngle, 0.0, 1.0, 0.0); // æ²¿ Y è½´æ—‹è½¬ï¼Œä¸éœ€è¦ä¹˜å…¬è½¬è§’é€Ÿåº¦
+    glTranslatef(0.0, 0.0, -sunRadius);     // ç§»åŠ¨åˆ°æ­£ç¡®çš„ä½ç½®
+    glRotatef(fireSelfRotationSpeed * fireOrbitAngle, 0.0, 1.0, 0.0); // æ²¿ Y è½´è‡ªè½¬
     glBindTexture(GL_TEXTURE_2D, fireTexture);
     gluQuadricTexture(qobj, GL_TRUE);
     gluSphere(qobj, fireRadius, longitude, latitude);
@@ -164,68 +164,68 @@ void display()
 {
     GLUquadricObj*  qobj;
     qobj = gluNewQuadric();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);   //Çå³ı»º³å
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);   //æ¸…é™¤ç¼“å†²
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(-zoom* win_width / win_height, zoom* win_width / win_height, -zoom, zoom, -300.0, 300.0);   //ÇĞ»»ÎªÕı½»ÊÓ½Ç£»
+    glOrtho(-zoom* win_width / win_height, zoom* win_width / win_height, -zoom, zoom, -300.0, 300.0);   //åˆ‡æ¢ä¸ºæ­£äº¤è§†è§’ï¼›
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     drawbackground();
-    switch(flag)  //ÇĞ»»¹Û²ìÊÓ½Ç
+    switch(flag)  //åˆ‡æ¢è§‚å¯Ÿè§†è§’
    {
     case(1):
-    gluLookAt(20.0, 10.0, 10.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0);    //¹Û²ìÊÓ½Ç
+    gluLookAt(20.0, 10.0, 10.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0);    //è§‚å¯Ÿè§†è§’
     break;
     case(-1):
-    gluLookAt(0.0f, 0.0f, 20.0f,0.0f, 0.0f, 0.0f,0.0f, 1.0f, 0.0f);  //»»¸ö·½Ïò
+    gluLookAt(0.0f, 0.0f, 20.0f,0.0f, 0.0f, 0.0f,0.0f, 1.0f, 0.0f);  //æ¢ä¸ªæ–¹å‘
     break;
    }
-    drawsun(qobj);      //»æÖÆÌ«Ñô
-    drawplanet(qobj);   //»æÖÆÆäËûĞĞĞÇ
-    glutSwapBuffers();  //Ë¢ĞÂ»º³åÇø
+    drawsun(qobj);      //ç»˜åˆ¶å¤ªé˜³
+    drawplanet(qobj);   //ç»˜åˆ¶å…¶ä»–è¡Œæ˜Ÿ
+    glutSwapBuffers();  //åˆ·æ–°ç¼“å†²åŒº
 }
 
-void reshape(int width, int height)   // ´°¿Ú´óĞ¡±ä»¯»Øµ÷º¯Êı
+void reshape(int width, int height)   // çª—å£å¤§å°å˜åŒ–å›è°ƒå‡½æ•°
 {
-   glViewport(0, 0, width, height);   // ÉèÖÃÊÓ¿Ú´óĞ¡
-   glMatrixMode(GL_PROJECTION);  // ÉèÖÃÍ¶Ó°¾ØÕó
+   glViewport(0, 0, width, height);   // è®¾ç½®è§†å£å¤§å°
+   glMatrixMode(GL_PROJECTION);  // è®¾ç½®æŠ•å½±çŸ©é˜µ
    glLoadIdentity();
    gluPerspective(45.0, (GLfloat)width / (GLfloat)height, 0.1, 100.0);
-   glMatrixMode(GL_MODELVIEW);  // ÇĞ»»µ½Ä£ĞÍÊÓÍ¼¾ØÕó
+   glMatrixMode(GL_MODELVIEW);  // åˆ‡æ¢åˆ°æ¨¡å‹è§†å›¾çŸ©é˜µ
 }
 
 void keyboard (unsigned char key, int x, int y)
 {
    switch (key) {
-      case 'e':       //µØÇò×Ô×ª
+      case 'e':       //åœ°çƒè‡ªè½¬
       case 'E':
-         Angle += (earthSelfRotationSpeed-0.25); //Ôö¼Ó×Ô×ªµÄ½Ç¶È£¬ÄæÊ±ÕëĞı×ª
+         Angle += (earthSelfRotationSpeed-0.25); //å¢åŠ è‡ªè½¬çš„è§’åº¦ï¼Œé€†æ—¶é’ˆæ—‹è½¬
          glutPostRedisplay();
          break;
-      case 's':        //µØÇò¹«×ª
+      case 's':        //åœ°çƒå…¬è½¬
       case 'S':
          earthOrbitAngle += earthOrbitSpeed;
-         moonOrbitAngle += moonOrbitSpeed;   //¼õÉÙ×Ô×ªµÄ½Ç¶È£¬Ë³Ê±ÕëĞı×ª
+         moonOrbitAngle += moonOrbitSpeed;   //å‡å°‘è‡ªè½¬çš„è§’åº¦ï¼Œé¡ºæ—¶é’ˆæ—‹è½¬
          glutPostRedisplay();
          break;
-      case 'y':        //ÔÂÇò¹«×ª
+      case 'y':        //æœˆçƒå…¬è½¬
       case 'Y':
          moonOrbitAngle += (moonOrbitSpeed-0.7);
          glutPostRedisplay();
         break;
-      case 'r':           //Õû¸öÏµÍ³Í¬²½ÔËĞĞ
+      case 'r':           //æ•´ä¸ªç³»ç»ŸåŒæ­¥è¿è¡Œ
       case 'R':
          earthOrbitAngle += earthOrbitSpeed;
          Angle=earthOrbitAngle;
          moonOrbitAngle += moonOrbitSpeed;
-         sunOrbitAngle += sunSelfRotationSpeed;  //Ôö¼Ó¹«×ªµÄ½Ç¶È£¬ÄæÊ±ÕëĞı×ª
+         sunOrbitAngle += sunSelfRotationSpeed;  //å¢åŠ å…¬è½¬çš„è§’åº¦ï¼Œé€†æ—¶é’ˆæ—‹è½¬
          waterOrbitAngle += waterSelfRotationSpeed/3;
          goldOrbitAngle += goldSelfRotationSpeed/3;
          fireOrbitAngle += fireSelfRotationSpeed/5;
          glutPostRedisplay();
          break;
 	  case 'l':
-		 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //Ê¹ÓÃÏß¿òÄ£ĞÍÏÔÊ¾ÎïÌå
+		 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //ä½¿ç”¨çº¿æ¡†æ¨¡å‹æ˜¾ç¤ºç‰©ä½“
 		 glDisable(GL_LIGHTING);
          glDisable(GL_TEXTURE_2D);
 		 longitude = 20;
@@ -233,12 +233,12 @@ void keyboard (unsigned char key, int x, int y)
 		 glutPostRedisplay();
 		 break;
 	  case 'f':
-         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //Ê¹ÓÃ¶à±ßĞÎÌî³äÄ£ĞÍĞÍÏÔÊ¾ÎïÌå
+         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //ä½¿ç”¨å¤šè¾¹å½¢å¡«å……æ¨¡å‹å‹æ˜¾ç¤ºç‰©ä½“
 		 longitude = 200;
 	     latitude=200;
 		 glutPostRedisplay();
 		 break;
-      case'v':         //ÇĞ»»ÊÓ½Ç
+      case'v':         //åˆ‡æ¢è§†è§’
         flag=-flag;
         glutPostRedisplay();
         break;
@@ -249,18 +249,18 @@ void keyboard (unsigned char key, int x, int y)
          break;
    }
 }
-// Ö÷º¯Êı
+// ä¸»å‡½æ•°
 int main(int argc, char **argv)
 {
-  // ³õÊ¼»¯ GLUT
+  // åˆå§‹åŒ– GLUT
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowSize(win_width, win_height);
-  glutCreateWindow("ÎâÌÎ 20211120234 Solar System");
-  init();    // ³õÊ¼»¯
-  glutDisplayFunc(display);   //»æÍ¼
-  glutReshapeFunc(reshape);   //´°¿Ú¸Ä±ä»Øµ÷
-  glutKeyboardFunc(keyboard);  //¼üÅÌ»Øµ÷
-  glutMainLoop();   // ½øÈëÑ­»·
+  glutCreateWindow("å´æ¶› 20211120234 Solar System");
+  init();    // åˆå§‹åŒ–
+  glutDisplayFunc(display);   //ç»˜å›¾
+  glutReshapeFunc(reshape);   //çª—å£æ”¹å˜å›è°ƒ
+  glutKeyboardFunc(keyboard);  //é”®ç›˜å›è°ƒ
+  glutMainLoop();   // è¿›å…¥å¾ªç¯
   return 0;
 }
